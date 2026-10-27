@@ -1,0 +1,75 @@
+"use client";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+interface SlideItem {
+  image: string;
+  title: string;
+  subtitle?: string;
+  buttonText?: string;
+  href?: string;
+}
+
+interface SliderProps {
+  slides: SlideItem[],
+  spaceBetween?: number;
+  slidesPerView?: number;
+}
+
+export default function Slider({slides, spaceBetween = 50, slidesPerView = 3,}: SliderProps) {
+
+  const arrowStyles = [
+    "[--swiper-navigation-color:var(--primary)]",
+    // circle
+    "[&_.swiper-button-prev]:size-12! [&_.swiper-button-next]:size-12!",
+    "[&_.swiper-button-prev]:rounded-full [&_.swiper-button-next]:rounded-full",
+    "[&_.swiper-button-prev]:bg-white! [&_.swiper-button-next]:bg-white!",
+    "[&_.swiper-button-prev]:shadow-md [&_.swiper-button-next]:shadow-md",
+    // re-center, since Swiper's margin-top assumes its own size
+    "[&_.swiper-button-prev]:mt-0! [&_.swiper-button-next]:mt-0!",
+    "[&_.swiper-button-prev]:-translate-y-1/2 [&_.swiper-button-next]:-translate-y-1/2",
+    // chevron size inside the circle
+    "[&_.swiper-button-prev>svg]:size-5! [&_.swiper-button-next>svg]:size-5!",
+  ].join(" ");
+
+  return (
+    <Swiper
+      className={arrowStyles}
+      modules={[Navigation, Pagination]}
+      loop
+      spaceBetween={spaceBetween}
+      slidesPerView={slidesPerView}
+      navigation
+      pagination={{ clickable: true, bulletActiveClass: "bg-white! opacity-100! w-5! rounded-2xl!"}}
+      scrollbar={{ draggable: true }}
+    >
+
+
+      {slides.map((slide, index) => (
+        <SwiperSlide key={`${slide.image}-${index}`}>
+          <div className="relative h-100 w-full">
+            <img src={slide.image} alt={slide.title} className="h-full w-full object-cover" />
+            {/* dark tint */}
+            <div className="absolute inset-0 bg-black/60" />
+            {/* slide text */}
+            <div className="absolute inset-0 flex flex-col items-start justify-center gap-3 px-16 text-white">
+              <h2 className="text-4xl font-bold">{slide.title}</h2>
+              {slide.subtitle && <p className="max-w-md text-lg">{slide.subtitle}</p>}
+              {slide.buttonText && (
+                <a
+                  href={slide.href ?? "#"}
+                  className="mt-2 rounded-md bg-primary px-6 py-2 font-medium text-white"
+                >
+                  {slide.buttonText}
+                </a>
+              )}
+            </div>
+          </div>
+        </SwiperSlide>
+))}
+    </Swiper>
+  );
+}

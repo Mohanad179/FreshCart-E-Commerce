@@ -50,7 +50,8 @@ const green =
 
 export default function Navbar() {
   return (
-    <header className="w-full bg-background">
+    <>
+      <header className="w-full bg-background">
       {/* Top bar (desktop only) */}
       <div className="hidden border-b text-sm text-muted-foreground lg:block">
         <div className="container mx-auto flex items-center justify-between px-4 py-2.5">
@@ -78,22 +79,23 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+      </header>
 
       {/* Main bar: wraps so the search drops to its own row on mobile */}
-      <div className="container mx-auto flex flex-wrap items-center gap-4 px-4 py-4 lg:flex-nowrap lg:gap-8">
+      <div className="sticky top-0 z-50 bg-background">
+        <div className="container mx-auto flex flex-wrap items-center gap-4 px-4 py-4 lg:flex-nowrap lg:gap-8">
         {/* Mobile menu */}
         <Sheet>
           <SheetTrigger
             render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
+              <button
+                type="button"
+                className="inline-flex size-9 items-center justify-center rounded-md hover:bg-accent lg:hidden"
                 aria-label="Open menu"
               />
             }
           >
-          <Menu className="size-6" />
+            <Menu className="size-6" />
           </SheetTrigger>
           <SheetContent side="left" className="w-72">
             <SheetHeader>
@@ -121,8 +123,11 @@ export default function Navbar() {
                   {c.label}
                 </Link>
               ))}
-              <Button  className={`mt-4 rounded-full ${green}`}>
-                <Link href="/login">Sign In</Link>
+              <Button
+                render={<Link href="/login" />}
+                className="mt-4 cursor-pointer rounded-full"
+              >
+                Sign In
               </Button>
             </nav>
           </SheetContent>
@@ -144,7 +149,7 @@ export default function Navbar() {
             type="submit"
             size="icon"
             aria-label="Search"
-            className={`size-9 rounded-full bg-primary`}
+            className={`size-9 rounded-full bg-primary cursor-pointer`}
           >
             <Search className="size-4 " />
           </Button>
@@ -152,10 +157,10 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <nav className="hidden items-center gap-7 text-[15px] font-medium lg:flex">
-          <Link href="/">Home</Link>
-          <Link href="/shop">Shop</Link>
+          <Link className="hover:text-primary" href="/">Home</Link>
+          <Link className="hover:text-primary" href="/shop">Shop</Link>
           <DropdownMenu>
-            <DropdownMenuTrigger className="group flex items-center gap-1 outline-none cursor-pointer">
+            <DropdownMenuTrigger className="group flex items-center gap-1 outline-none cursor-pointer hover:text-primary">
               Categories
               <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
             </DropdownMenuTrigger>
@@ -167,7 +172,7 @@ export default function Navbar() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Link href="/brands">Brands</Link>
+          <Link className="hover:text-primary" href="/brands">Brands</Link>
         </nav>
 
         {/* Actions */}
@@ -179,26 +184,30 @@ export default function Navbar() {
               <p className="text-sm font-semibold">24/7 Help</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon"  aria-label="Wishlist">
-            <Link href="/wishlist">
-              <Heart className="size-6" />
-            </Link>
-          </Button>
-          <Button variant="ghost" size="icon"  aria-label="Cart">
-            <Link href="/cart">
-              <ShoppingCart className="size-6" />
-            </Link>
+          <Button
+            nativeButton={false}
+            variant="ghost"
+            size="icon"
+            aria-label="Wishlist"
+            render={<Link href="/wishlist" />}
+          >
+            <Heart className="size-6" />
           </Button>
           <Button
-            
-            className={`hidden rounded-full px-6 lg:inline-flex bg-primary`}
+            nativeButton={false}
+            variant="ghost"
+            size="icon"
+            aria-label="Cart"
+            render={<Link href="/cart" />}
           >
-            <Link href="/login">
-              <User className="size-4" /> Sign In
-            </Link>
+            <ShoppingCart className="size-6" />
+          </Button>
+          <Button  nativeButton={false} render={<Link href="/login" />} className="hidden rounded-full px-6 lg:inline-flex">
+            <User className="size-4" /> Sign In
           </Button>
         </div>
       </div>
-    </header>
+      </div>
+    </>
   );
 }

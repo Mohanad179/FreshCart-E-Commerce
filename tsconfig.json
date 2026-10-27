@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      // "@/images/*": ["./src/assets/images/*" , "./public/*"],
+      "@/images/*": ["./src/assets/images/*" , "./public/*"],
     }
   },
   "include": [

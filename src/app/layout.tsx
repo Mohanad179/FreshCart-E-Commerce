@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "../components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
 const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage" });
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
         <Navbar/>
         {children}
+        <Footer/>
 
       </body>
     </html>
