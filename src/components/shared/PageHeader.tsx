@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 
 interface PageHeaderProps {
+  gradient?: string;
   title: string;
   description: string;
   icon: LucideIcon;
@@ -9,13 +10,14 @@ interface PageHeaderProps {
 }
 
 export default function PageHeader({
+  gradient = "from-green-600 to-green-400",
   title,
   description,
   icon: Icon,
   breadcrumbs = [],
 }: PageHeaderProps) {
   return (
-    <section className="bg-linear-to-r from-green-600 to-green-400 text-white">
+    <section className={`bg-linear-to-r ${gradient} text-white`}>
       <div className="container mx-auto px-5 py-6 md:py-8">
         <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-2 text-sm md:text-base">
           <Link href="/" className="opacity-90 hover:opacity-100">

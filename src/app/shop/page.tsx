@@ -9,7 +9,7 @@ console.log(allProducts);
 
 export default async function page() {
   return <>
-    <PageHeader 
+    <PageHeader
       icon={Package} 
       title='All Products' 
       description='Explore our complete product collection'

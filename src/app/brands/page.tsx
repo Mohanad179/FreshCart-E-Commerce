@@ -9,6 +9,7 @@ const allBrands = await getAllBrands();
 export default async function Brands() {
   return <>
     <PageHeader
+      gradient='from-orange-600 to-orange-400'
       icon={Tags} 
       title='All Brands' 
       description='Shop from your favorite brands'

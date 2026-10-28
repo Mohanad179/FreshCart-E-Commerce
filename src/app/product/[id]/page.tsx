@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { getProductById } from "@/services/products";
 import { notFound } from "next/navigation";
+import FeaturesStrip from "@/components/shared/FeaturesStrip";
 
 export default async function Page({params}: {
   params: Promise<{ id: string }>;
@@ -266,41 +267,7 @@ export default async function Page({params}: {
         </div>
       </section>
 
-      {/* Perks */}
-      <section className="mt-12 grid gap-4 rounded-xl bg-green-50 p-6 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          {
-            icon: Truck,
-            title: "Free Shipping",
-            text: "On orders over 500 EGP",
-          },
-          {
-            icon: RotateCcw,
-            title: "Easy Returns",
-            text: "14-day return policy",
-          },
-          {
-            icon: ShieldCheck,
-            title: "Secure Payment",
-            text: "100% secure checkout",
-          },
-          {
-            icon: Headphones,
-            title: "24/7 Support",
-            text: "Feel free to contact us"
-          }
-        ].map(({ icon: Icon, title, text }) => (
-          <div key={title} className="flex items-center mx-auto gap-4">
-            <span className="flex size-12 items-center justify-center rounded-xl bg-green-100 text-primary">
-              <Icon className="size-5" />
-            </span>
-            <div>
-              <p className="font-semibold">{title}</p>
-              <p className="text-sm text-gray-500">{text}</p>
-            </div>
-          </div>
-        ))}
-      </section>
+      <FeaturesStrip/>
     </main>
   );
 }
