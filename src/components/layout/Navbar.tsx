@@ -73,7 +73,7 @@ export default function Navbar() {
             <Link href="/login" className="flex items-center gap-2">
               <User className="size-4 text-primary" /> Sign In
             </Link>
-            <Link href="/register" className="flex items-center gap-2">
+            <Link href="/signup" className="flex items-center gap-2">
               <UserPlus className="size-4 text-primary" /> Sign Up
             </Link>
           </div>
