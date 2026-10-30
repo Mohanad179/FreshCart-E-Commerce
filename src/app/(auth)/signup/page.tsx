@@ -1,4 +1,5 @@
 import SignupForm from '@/components/authForms/SignupForm'
+import FeaturesStrip from '@/components/shared/FeaturesStrip';
 import { Star, Truck, ShieldCheck } from "lucide-react";
 
 
@@ -9,7 +10,7 @@ const features = [
 ];
 
 export default function SignupPage() {
-  return (
+  return <>
     <section className="container mx-auto px-4 py-10 sm:py-14 lg:py-12">
       <div className="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-2">
         {/* Left side: desktop only */}
@@ -41,5 +42,7 @@ export default function SignupPage() {
         <SignupForm />
       </div>
     </section>
-  );
+
+    <FeaturesStrip/>
+  </>;
 }
