@@ -13,9 +13,6 @@ import {
   Package,
   Truck,
   Check,
-  RotateCcw,
-  ShieldCheck,
-  Headphones,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getProductById } from "@/services/products";

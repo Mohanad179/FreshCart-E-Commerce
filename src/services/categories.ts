@@ -1,5 +1,5 @@
 import { Category } from "@/types/types";
-import { BASE } from "./products";
+import { BASE } from './API_BASE_URL';
 
 export async function getAllCategories(): Promise<Category | null>{
     try {

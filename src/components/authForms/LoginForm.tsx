@@ -2,26 +2,96 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Mail, Lock, Eye, EyeOff, Users, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+import { BASE } from "@/services/API_BASE_URL";
 
+const inputWrapper = "relative flex items-center";
 
-const inputWrapper =
-  "relative flex items-center";
 const inputClass =
   "h-12 w-full rounded-lg border border-gray-200 bg-gray-50/60 pl-11 pr-4 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-green-600 focus:bg-white focus:ring-2 focus:ring-green-600/20";
+
 const socialClass =
   "flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-800 transition hover:bg-gray-50";
 
+const loginSchema = z.object({
+  email: z.email("Enter a valid email address."),
+  password: z.string().min(1, "Password is required."),
+  remember: z.boolean(),
+});
+type LoginValues = z.infer<typeof loginSchema>;
+
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [serverMessage, setServerMessage] = useState("");
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginValues>({
+    defaultValues: { email: "", password: "", remember: false },
+  });
 
-  // TODO: replace with react-hook-form logic
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-  }
+  const onSubmit = async (values: LoginValues) => {
+    setServerMessage("");
+    const parsed = loginSchema.safeParse(values);
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) {
+        setError(issue.path[0] as keyof LoginValues, {
+          type: "manual",
+          message: issue.message,
+        });
+      }
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE}/auth/signin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: values.email.trim(),
+          password: values.password,
+        }),
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok)
+        throw new Error(result?.message || "Email or password is incorrect.");
+      if (!result?.token)
+        throw new Error(
+          "Signed in, but the API did not return an authentication token.",
+        );
+
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+      (values.remember ? localStorage : sessionStorage).setItem(
+        "token",
+        result.token,
+      );
+      window.dispatchEvent(new Event("auth-change"));
+      router.push("/");
+    } catch (error) {
+      setServerMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to connect. Please try again.",
+      );
+    }
+  };
+
+  const errorText = (message?: string) =>
+    message && (
+      <p role="alert" className="mt-1 text-xs text-red-600">
+        {message}
+      </p>
+    );
 
   return (
     <div className="mx-auto w-full max-w-xl rounded-2xl border border-gray-100 bg-white p-6 shadow-xl sm:p-10">
@@ -59,31 +129,40 @@ export default function LoginForm() {
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
         <div>
-          <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-900">
+          <label
+            htmlFor="email"
+            className="mb-2 block text-sm font-medium text-gray-900"
+          >
             Email Address
           </label>
           <div className={inputWrapper}>
             <Mail className="pointer-events-none absolute left-4 size-4 text-gray-400" />
             <input
               id="email"
-              name="email"
               type="email"
               autoComplete="email"
               placeholder="Enter your email"
               className={inputClass}
+              {...register("email")}
             />
           </div>
-          {/* TODO: email error message */}
+          {errorText(errors.email?.message)}
         </div>
 
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <label htmlFor="password" className="text-sm font-medium text-gray-900">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-gray-900"
+            >
               Password
             </label>
-            <Link href="/forgot-password" className="text-sm text-green-600 hover:underline">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-green-600 hover:underline"
+            >
               Forgot Password?
             </Link>
           </div>
@@ -91,11 +170,11 @@ export default function LoginForm() {
             <Lock className="pointer-events-none absolute left-4 size-4 text-gray-400" />
             <input
               id="password"
-              name="password"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               placeholder="Enter your password"
               className={`${inputClass} pr-12`}
+              {...register("password")}
             />
             <button
               type="button"
@@ -103,26 +182,37 @@ export default function LoginForm() {
               aria-label={showPassword ? "Hide password" : "Show password"}
               className="absolute right-4 text-gray-500 hover:text-gray-700"
             >
-              {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              {showPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
             </button>
           </div>
-          {/* TODO: password error message */}
+          {errorText(errors.password?.message)}
         </div>
 
         <label className="flex cursor-pointer items-center gap-3 text-sm text-gray-800">
           <input
             type="checkbox"
-            name="remember"
             className="size-4 rounded border-gray-300 accent-green-600"
+            {...register("remember")}
           />
           Keep me signed in
         </label>
 
+        {serverMessage && (
+          <p role="alert" className="text-sm text-red-600">
+            {serverMessage}
+          </p>
+        )}
+
         <Button
           type="submit"
+          disabled={isSubmitting}
           className="h-12 w-full rounded-lg bg-green-600 text-base font-semibold text-white shadow-md hover:bg-green-700"
         >
-          Sign In
+          {isSubmitting ? "Signing in…" : "Sign In"}
         </Button>
       </form>
 
@@ -130,14 +220,23 @@ export default function LoginForm() {
       <div className="mt-6 border-t border-gray-100 pt-6 text-center">
         <p className="text-sm text-gray-700 sm:text-base">
           New to FreshCart?{" "}
-          <Link href="/signup" className="font-semibold text-green-600 hover:underline">
+          <Link
+            href="/signup"
+            className="font-semibold text-green-600 hover:underline"
+          >
             Create an account
           </Link>
         </p>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-500">
-          <span className="flex items-center gap-1.5"><Lock className="size-3.5" /> SSL Secured</span>
-          <span className="flex items-center gap-1.5"><Users className="size-3.5" /> 50K+ Users</span>
-          <span className="flex items-center gap-1.5"><Star className="size-3.5 fill-current" /> 4.9 Rating</span>
+          <span className="flex items-center gap-1.5">
+            <Lock className="size-3.5" /> SSL Secured
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Users className="size-3.5" /> 50K+ Users
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Star className="size-3.5 fill-current" /> 4.9 Rating
+          </span>
         </div>
       </div>
     </div>

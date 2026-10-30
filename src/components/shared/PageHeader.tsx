@@ -42,7 +42,7 @@ export default function PageHeader({
             <Icon className="size-6 md:size-8" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold md:text-2xl">{title}</h1>
+            <h1 className="text-2xl font-bold md:text-4xl">{title}</h1>
             <p className="mt-1 text-xm md:text-base opacity-90">{description}</p>
           </div>
         </div>

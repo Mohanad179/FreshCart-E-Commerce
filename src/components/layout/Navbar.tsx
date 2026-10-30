@@ -11,8 +11,6 @@ import {
   Search,
   ShoppingCart,
   Truck,
-  User,
-  UserPlus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -30,6 +28,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import logo from "@/assets/images/navlogo.png";
+import NavbarAuthActions from "@/components/layout/NavbarAuthActions";
 
 const links = [
   { label: "Home", href: "/" },
@@ -44,9 +43,6 @@ const categories = [
   { label: "Men's Fashion", href: "/shop?category=mens-fashion" },
   { label: "Beauty & Health", href: "/shop?category=beauty-health" },
 ];
-
-const green =
-  "bg-[var(--primary-green)] text-white hover:bg-[var(--primary-green)] hover:opacity-90";
 
 export default function Navbar() {
   return (
@@ -70,12 +66,7 @@ export default function Navbar() {
             <span className="flex items-center gap-2">
               <Mail className="size-4 text-primary" /> support@freshcart.com
             </span>
-            <Link href="/login" className="flex items-center gap-2">
-              <User className="size-4 text-primary" /> Sign In
-            </Link>
-            <Link href="/signup" className="flex items-center gap-2">
-              <UserPlus className="size-4 text-primary" /> Sign Up
-            </Link>
+            <NavbarAuthActions variant="header" />
           </div>
         </div>
       </div>
@@ -123,12 +114,7 @@ export default function Navbar() {
                   {c.label}
                 </Link>
               ))}
-              <Button
-                render={<Link href="/login" />}
-                className="mt-4 cursor-pointer rounded-full"
-              >
-                Sign In
-              </Button>
+              <NavbarAuthActions variant="mobile" />
             </nav>
           </SheetContent>
         </Sheet>
@@ -202,9 +188,7 @@ export default function Navbar() {
           >
             <ShoppingCart className="size-6" />
           </Button>
-          <Button  nativeButton={false} render={<Link href="/login" />} className="hidden rounded-full px-6 lg:inline-flex">
-            <User className="size-4" /> Sign In
-          </Button>
+          <NavbarAuthActions variant="desktop" />
         </div>
       </div>
       </div>

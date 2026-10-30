@@ -1,6 +1,7 @@
 import { Product } from "@/types/types";
+import { BASE } from "./API_BASE_URL";
 
-export const BASE = 'https://ecommerce.routemisr.com/api/v1';
+
 
 export async function getAllProducts(): Promise<Product[] | null> {
     try {
