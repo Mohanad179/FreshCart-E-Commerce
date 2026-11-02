@@ -9,10 +9,10 @@ const features = [
 
 export default function FeaturesStrip() {
   return (
-    <section className="border-t border-green-100 bg-green-50">
-      <div className="container mx-auto grid grid-cols-1 gap-6 px-4 py-6 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="relative left-1/2 w-screen -translate-x-1/2 border-t border-green-100 bg-green-50 mt-5">
+      <div className="mx-auto grid w-full max-w-full grid-cols-1 gap-6 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
         {features.map(({ icon: Icon, title, desc }) => (
-          <div key={title} className="flex items-center gap-3">
+          <div key={title} className="flex items-center justify-center gap-3">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-green-100">
               <Icon className="size-5 text-green-600" />
             </span>

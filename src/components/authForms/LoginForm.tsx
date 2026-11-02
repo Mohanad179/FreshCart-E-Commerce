@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { BASE } from "@/services/API_BASE_URL";
+import { loginSchema } from "@/schemas/auth";
 
 const inputWrapper = "relative flex items-center";
 
@@ -19,11 +20,7 @@ const inputClass =
 const socialClass =
   "flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-800 transition hover:bg-gray-50";
 
-const loginSchema = z.object({
-  email: z.email("Enter a valid email address."),
-  password: z.string().min(1, "Password is required."),
-  remember: z.boolean(),
-});
+
 type LoginValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
@@ -53,7 +50,7 @@ export default function LoginForm() {
     }
 
     try {
-      const response = await fetch(`${BASE}/auth/signin`, {
+      const res = await fetch(`${BASE}/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -61,8 +58,8 @@ export default function LoginForm() {
           password: values.password,
         }),
       });
-      const result = await response.json().catch(() => null);
-      if (!response.ok)
+      const result = await res.json().catch(() => null);
+      if (!res.ok)
         throw new Error(result?.message || "Email or password is incorrect.");
       if (!result?.token)
         throw new Error(

@@ -10,34 +10,8 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { BASE } from "@/services/API_BASE_URL";
+import { signupSchema } from "@/schemas/auth";
 
-const signupSchema = z
-  .object({
-    name: z.string().trim().min(2, "Name must be at least 2 characters."),
-    email: z.email("Enter a valid email address."),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters.")
-      .regex(/[0-9]/, "Password must include a number.")
-      .regex(/[^A-Za-z0-9]/, "Password must include a symbol."),
-    rePassword: z.string(),
-    phone: z
-      .string()
-      .trim()
-      .refine((value) => {
-        const digits = value.replace(/\D/g, "");
-        return (
-          /^[+\d\s()-]+$/.test(value) &&
-          digits.length >= 10 &&
-          digits.length <= 15
-        );
-      }, "Enter a valid phone number (10–15 digits)."),
-    terms: z.boolean().refine(Boolean, "You must agree to continue."),
-  })
-  .refine((data) => data.password === data.rePassword, {
-    path: ["rePassword"],
-    message: "Passwords do not match.",
-  });
 
 type SignupValues = z.infer<typeof signupSchema>;
 const labelClass = "mb-2 block text-sm font-medium text-gray-900";
@@ -49,13 +23,7 @@ const socialClass =
 export default function SignupForm() {
   const router = useRouter();
   const [serverMessage, setServerMessage] = useState("");
-  const {
-    register,
-    handleSubmit,
-    control,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupValues>({
+  const { register, handleSubmit, control, setError, formState: { errors, isSubmitting }, } = useForm<SignupValues>({
     defaultValues: {
       name: "",
       email: "",
@@ -85,7 +53,7 @@ export default function SignupForm() {
     }
 
     try {
-      const response = await fetch(`${BASE}/auth/signup`, {
+      const res = await fetch(`${BASE}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -96,8 +64,9 @@ export default function SignupForm() {
           phone: values.phone.trim().replace(/[\s()-]/g, ""),
         }),
       });
-      const result = await response.json().catch(() => null);
-      if (!response.ok)
+      
+      const result = await res.json().catch(() => null);
+      if (!res.ok)
         throw new Error(
           result?.message || "Could not create your account. Please try again.",
         );

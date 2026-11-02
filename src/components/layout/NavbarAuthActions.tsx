@@ -1,15 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, User, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type Variant = "header" | "mobile" | "desktop";
 
 export default function NavbarAuthActions({ variant }: { variant: Variant }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -34,44 +45,49 @@ export default function NavbarAuthActions({ variant }: { variant: Variant }) {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
     setIsLoggedIn(false);
+    setIsLogoutDialogOpen(false);
     window.dispatchEvent(new Event("auth-change"));
     router.push("/");
     router.refresh();
   };
 
+  let authActions: ReactNode;
+
   if (variant === "header") {
     if (isLoggedIn) {
-      return (
-        <button
-          type="button"
-          onClick={logout}
-          className="flex items-center gap-2 cursor-pointer"
+      authActions = (
+        <AlertDialogTrigger
+          render={
+            <button
+              type="button"
+              className="flex items-center gap-2 cursor-pointer"
+            />
+          }
         >
           <LogOut className="size-4 text-red-500" /> Log Out
-        </button>
+        </AlertDialogTrigger>
+      );
+    } else {
+      authActions = (
+        <>
+          <Link href="/login" className="flex items-center gap-2">
+            <User className="size-4 text-primary" /> Sign In
+          </Link>
+          <Link href="/signup" className="flex items-center gap-2">
+            <UserPlus className="size-4 text-primary" /> Sign Up
+          </Link>
+        </>
       );
     }
-    return (
-      <>
-        <Link href="/login" className="flex items-center gap-2">
-          <User className="size-4 text-primary" /> Sign In
-        </Link>
-        <Link href="/signup" className="flex items-center gap-2">
-          <UserPlus className="size-4 text-primary" /> Sign Up
-        </Link>
-      </>
-    );
-  }
-
-  if (variant === "mobile") {
-    return isLoggedIn ? (
-      <Button
-        type="button"
-        onClick={logout}
-        className="mt-4 cursor-pointer rounded-full bg-red-500 hover:bg-red-600"
+  } else if (variant === "mobile") {
+    authActions = isLoggedIn ? (
+      <AlertDialogTrigger
+        render={
+          <Button className="mt-4 cursor-pointer rounded-full bg-red-500 hover:bg-red-600" />
+        }
       >
         <LogOut className="size-4" /> Log Out
-      </Button>
+      </AlertDialogTrigger>
     ) : (
       <>
         <Button
@@ -89,23 +105,43 @@ export default function NavbarAuthActions({ variant }: { variant: Variant }) {
         </Button>
       </>
     );
+  } else {
+    authActions = isLoggedIn ? (
+      <AlertDialogTrigger
+        render={
+          <Button className="hidden rounded-full bg-red-500 cursor-pointer px-6 hover:bg-red-600 lg:inline-flex" />
+        }
+      >
+        <LogOut className="size-4" /> Log Out
+      </AlertDialogTrigger>
+    ) : (
+      <Button
+        nativeButton={false}
+        render={<Link href="/login" />}
+        className="hidden rounded-full px-6 lg:inline-flex"
+      >
+        <User className="size-4" /> Sign In
+      </Button>
+    );
   }
 
-  return isLoggedIn ? (
-    <Button
-      type="button"
-      onClick={logout}
-      className="hidden rounded-full bg-red-500 cursor-pointer px-6 hover:bg-red-600 lg:inline-flex"
-    >
-      <LogOut className="size-4" /> Log Out
-    </Button>
-  ) : (
-    <Button
-      nativeButton={false}
-      render={<Link href="/login" />}
-      className="hidden rounded-full px-6 lg:inline-flex"
-    >
-      <User className="size-4" /> Sign In
-    </Button>
+  return (
+    <AlertDialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+      {authActions}
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Log out?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to logout?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+          <Button type="button" variant="destructive" className="cursor-pointer" onClick={logout}>
+            Log Out
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
