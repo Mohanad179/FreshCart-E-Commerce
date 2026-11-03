@@ -11,6 +11,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { BASE } from "@/services/API_BASE_URL";
 import { loginSchema } from "@/schemas/auth";
+import { toast } from "sonner";
 
 const inputWrapper = "relative flex items-center";
 
@@ -58,23 +59,31 @@ export default function LoginForm() {
           password: values.password,
         }),
       });
+
       const result = await res.json().catch(() => null);
-      if (!res.ok)
+
+      if (!res.ok){
         throw new Error(result?.message || "Email or password is incorrect.");
-      if (!result?.token)
-        throw new Error(
+      }
+
+      if (!result?.token){
+         throw new Error(
           "Signed in, but the API did not return an authentication token.",
         );
-
+      }
+       
       localStorage.removeItem("token");
       sessionStorage.removeItem("token");
       (values.remember ? localStorage : sessionStorage).setItem(
         "token",
         result.token,
       );
+
+      toast.success("Login Successfully!");
       window.dispatchEvent(new Event("auth-change"));
       router.push("/");
     } catch (error) {
+      toast.error("Error Signing in!!");
       setServerMessage(
         error instanceof Error
           ? error.message

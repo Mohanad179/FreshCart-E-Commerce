@@ -11,6 +11,7 @@ import { FaFacebook } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { BASE } from "@/services/API_BASE_URL";
 import { signupSchema } from "@/schemas/auth";
+import { toast } from "sonner";
 
 
 type SignupValues = z.infer<typeof signupSchema>;
@@ -23,7 +24,7 @@ const socialClass =
 export default function SignupForm() {
   const router = useRouter();
   const [serverMessage, setServerMessage] = useState("");
-  
+
   const { register, handleSubmit, control, setError, formState: { errors, isSubmitting }, } = useForm<SignupValues>({
     defaultValues: {
       name: "",
@@ -67,14 +68,18 @@ export default function SignupForm() {
       });
       
       const result = await res.json().catch(() => null);
+
+      // Error handling
       if (!res.ok)
         throw new Error(
           result?.message || "Could not create your account. Please try again.",
         );
 
+      toast.success("Account created successfully! Please log in.");
       setServerMessage("Your account was created. You can now sign in.");
       router.push("/login");
     } catch (error) {
+      toast.error("Error Creating Account!!");
       setServerMessage(
         error instanceof Error
           ? error.message
