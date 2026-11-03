@@ -171,6 +171,7 @@ export default function Navbar() {
             </div>
           </div>
           <Button
+            className="hover:text-primary"
             nativeButton={false}
             variant="ghost"
             size="icon"
@@ -180,6 +181,7 @@ export default function Navbar() {
             <Heart className="size-6" />
           </Button>
           <Button
+            className="hover:text-primary"
             nativeButton={false}
             variant="ghost"
             size="icon"

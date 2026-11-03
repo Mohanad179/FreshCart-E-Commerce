@@ -7,6 +7,8 @@ import image3 from "@/images/e-comm-3.jpg"
 import Slider from "@/components/shared/Slider";
 import Features from "@/components/shared/Features";
 import CategoriesSkeleton from "@/components/home/CategoriesSkeleton";
+import { Reveal } from "@/components/shared/Reveal";
+import PromoCards from "@/components/home/PromoCards";
 // import categories as a lazy component
 const CategoriesAsLazy = lazy(() => import("@/components/home/Categories"));
 
@@ -30,13 +32,27 @@ export default async function Home() {
     ]}
     />
 
-    <Features/>
+    <Reveal>
+      <Features/>
+    </Reveal>
     
-    <Suspense fallback={<CategoriesSkeleton/>}>
-      <CategoriesAsLazy/>
-    </Suspense>
+    <Reveal>
+      <Suspense fallback={<CategoriesSkeleton/>}>
+        <CategoriesAsLazy/>
+      </Suspense>
+    </Reveal>
 
-    <h2 className="px-4 mb-6 text-2xl font-bold sm:text-3xl">Featured <span className="text-primary"> Products</span></h2>
+
+    <Reveal>
+      <PromoCards/>
+    </Reveal>
+
+
+    <Reveal>
+      <h2 className="px-4 mb-6 text-2xl font-bold sm:text-3xl">Featured <span className="text-primary"> Products</span></h2>
+    </Reveal>
+
+
     <ProductsGrid products={allProducts || []} />
     </>
   );

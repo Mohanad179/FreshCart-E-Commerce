@@ -23,6 +23,7 @@ const socialClass =
 export default function SignupForm() {
   const router = useRouter();
   const [serverMessage, setServerMessage] = useState("");
+  
   const { register, handleSubmit, control, setError, formState: { errors, isSubmitting }, } = useForm<SignupValues>({
     defaultValues: {
       name: "",
