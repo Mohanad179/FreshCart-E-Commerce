@@ -10,11 +10,10 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { BASE } from "@/services/API_BASE_URL";
-import { signupSchema } from "@/schemas/auth";
+import { signupSchema, SignupValues } from "@/schemas/auth";
 import { toast } from "sonner";
 
 
-type SignupValues = z.infer<typeof signupSchema>;
 const labelClass = "mb-2 block text-sm font-medium text-gray-900";
 const inputClass =
   "h-11 w-full rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-green-600 focus:ring-2 focus:ring-green-600/20";
@@ -43,6 +42,7 @@ export default function SignupForm() {
         ? { label: "Strong", percent: 100 }
         : { label: "Fair", percent: 60 };
 
+  // onSubmit function to handle form submission
   const onSubmit = async (values: SignupValues) => {
     setServerMessage("");
     const parsed = signupSchema.safeParse(values);

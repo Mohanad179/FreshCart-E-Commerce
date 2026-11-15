@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { BASE } from "@/services/API_BASE_URL";
-import { loginSchema } from "@/schemas/auth";
+import { loginSchema, LoginValues } from "@/schemas/auth";
 import { toast } from "sonner";
 
 const inputWrapper = "relative flex items-center";
@@ -20,9 +20,6 @@ const inputClass =
 
 const socialClass =
   "flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-800 transition hover:bg-gray-50";
-
-
-type LoginValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -37,6 +34,7 @@ export default function LoginForm() {
     defaultValues: { email: "", password: "", remember: false },
   });
 
+  // onSubmit function to handle form submission
   const onSubmit = async (values: LoginValues) => {
     setServerMessage("");
     const parsed = loginSchema.safeParse(values);
@@ -74,10 +72,11 @@ export default function LoginForm() {
        
       localStorage.removeItem("token");
       sessionStorage.removeItem("token");
-      (values.remember ? localStorage : sessionStorage).setItem(
-        "token",
-        result.token,
-      );
+
+      // if the user CHECKS the 'keep me signed in', save the token in localStorage  
+      if (values.remember) localStorage.setItem("token", result.token);
+      // if the user DOES NOT CHECK the 'keep me signed in', save the token in sessionStorage
+      if (!values.remember) sessionStorage.setItem("token", result.token);
 
       toast.success("Login Successfully!");
       window.dispatchEvent(new Event("auth-change"));

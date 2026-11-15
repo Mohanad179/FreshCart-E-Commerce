@@ -24,7 +24,7 @@ export default function Slider({slides, spaceBetween = 50, slidesPerView = 3,}: 
   const arrowStyles = [
     "[--swiper-navigation-color:var(--primary)]",
     // circle
-    "[&_.swiper-button-prev]:size-12! [&_.swiper-button-next]:size-12!",
+    "[&_.swiper-button-prev]:size-10! [&_.swiper-button-next]:size-10!",
     "[&_.swiper-button-prev]:rounded-full [&_.swiper-button-next]:rounded-full",
     "[&_.swiper-button-prev]:bg-white! [&_.swiper-button-next]:bg-white!",
     "[&_.swiper-button-prev]:shadow-md [&_.swiper-button-next]:shadow-md",
@@ -32,7 +32,8 @@ export default function Slider({slides, spaceBetween = 50, slidesPerView = 3,}: 
     "[&_.swiper-button-prev]:mt-0! [&_.swiper-button-next]:mt-0!",
     "[&_.swiper-button-prev]:-translate-y-1/2 [&_.swiper-button-next]:-translate-y-1/2",
     // chevron size inside the circle
-    "[&_.swiper-button-prev>svg]:size-5! [&_.swiper-button-next>svg]:size-5!",
+    "[&_.swiper-button-prev>svg]:size-4! [&_.swiper-button-next>svg]:size-4!",
+    "[--swiper-navigation-sides-offset:10px]"
   ].join(" ");
 
   return (
@@ -42,6 +43,7 @@ export default function Slider({slides, spaceBetween = 50, slidesPerView = 3,}: 
       loop
       spaceBetween={spaceBetween}
       slidesPerView={slidesPerView}
+      // give the slider navifation a margin
       navigation
       pagination={{ clickable: true, bulletActiveClass: "bg-white! opacity-100! w-5! rounded-2xl!"}}
       scrollbar={{ draggable: true }}
