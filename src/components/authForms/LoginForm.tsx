@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Mail, Lock, Eye, EyeOff, Users, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
-import { BASE } from "@/services/API_BASE_URL";
-import { loginSchema, LoginValues } from "@/schemas/auth";
+import { LoginValues } from "@/schemas/auth";
 import { toast } from "sonner";
+import { loginActions } from "@/app/(auth)/login/loginActions";
 
 const inputWrapper = "relative flex items-center";
 
@@ -28,7 +27,6 @@ export default function LoginForm() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
     defaultValues: { email: "", password: "", remember: false },
@@ -37,58 +35,19 @@ export default function LoginForm() {
   // onSubmit function to handle form submission
   const onSubmit = async (values: LoginValues) => {
     setServerMessage("");
-    const parsed = loginSchema.safeParse(values);
-    if (!parsed.success) {
-      for (const issue of parsed.error.issues) {
-        setError(issue.path[0] as keyof LoginValues, {
-          type: "manual",
-          message: issue.message,
-        });
-      }
+     startTransition(async () => {
+    const res = await loginActions(values);
+
+    if (!res.success) {
+      setServerMessage(res.message);
+      toast.error(res.message);
       return;
     }
 
-    try {
-      const res = await fetch(`${BASE}/auth/signin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: values.email.trim(),
-          password: values.password,
-        }),
-      });
-
-      const result = await res.json().catch(() => null);
-
-      if (!res.ok){
-        throw new Error(result?.message || "Email or password is incorrect.");
-      }
-
-      if (!result?.token){
-         throw new Error(
-          "Signed in, but the API did not return an authentication token.",
-        );
-      }
-       
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
-
-      // if the user CHECKS the 'keep me signed in', save the token in localStorage  
-      if (values.remember) localStorage.setItem("token", result.token);
-      // if the user DOES NOT CHECK the 'keep me signed in', save the token in sessionStorage
-      if (!values.remember) sessionStorage.setItem("token", result.token);
-
-      toast.success("Login Successfully!");
-      window.dispatchEvent(new Event("auth-change"));
-      router.push("/");
-    } catch (error) {
-      toast.error("Error Signing in!!");
-      setServerMessage(
-        error instanceof Error
-          ? error.message
-          : "Unable to connect. Please try again.",
-      );
-    }
+    toast.success("Login successful!");
+    router.push("/");
+    router.refresh();
+  });
   };
 
   const errorText = (message?: string) =>

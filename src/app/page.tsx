@@ -29,7 +29,7 @@ export default async function Home() {
       { image: image1.src, title: "Premium Quality Guaranteed", subtitle: "Get 20% off your first order", buttonText: "Shop Now", href: "/shop" },
       { image: image2.src, title: "Organic Products", subtitle: "Straight from the farm", buttonText: "Explore", href: "/categories" },
       { image: image3.src, title: "Daily Deals", subtitle: "Up to 40% off", buttonText: "View Deals", href: "/shop" },
-    ]}
+      ]}
     />
 
     <Reveal>

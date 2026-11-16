@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, User, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logoutAction } from "@/app/(auth)/login/loginActions";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -18,35 +19,13 @@ import {
 
 type Variant = "header" | "mobile" | "desktop";
 
-export default function NavbarAuthActions({ variant }: { variant: Variant }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function NavbarAuthActions({ variant, isLoggedIn }: { variant: Variant; isLoggedIn: boolean }) {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const syncAuthState = () => {
-      setIsLoggedIn(
-        Boolean(
-          localStorage.getItem("token") || sessionStorage.getItem("token"),
-        ),
-      );
-    };
-
-    syncAuthState();
-    window.addEventListener("storage", syncAuthState);
-    window.addEventListener("auth-change", syncAuthState);
-    return () => {
-      window.removeEventListener("storage", syncAuthState);
-      window.removeEventListener("auth-change", syncAuthState);
-    };
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
-    setIsLoggedIn(false);
+  const logout = async () => {
+    await logoutAction();
     setIsLogoutDialogOpen(false);
-    window.dispatchEvent(new Event("auth-change"));
     router.push("/");
     router.refresh();
   };

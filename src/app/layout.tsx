@@ -20,7 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${jakarta.variable} ${bricolage.variable}`}
     >
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased overflow-x-clip">
 
         <Navbar/>
         {children}
