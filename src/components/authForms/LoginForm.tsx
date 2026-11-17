@@ -10,7 +10,9 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { LoginValues } from "@/schemas/auth";
 import { toast } from "sonner";
-import { loginActions } from "@/app/(auth)/login/loginActions";
+import { loginActions } from "@/services/loginService";
+
+
 
 const inputWrapper = "relative flex items-center";
 

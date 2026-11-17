@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, User, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { logoutAction } from "@/app/(auth)/login/loginActions";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -16,6 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { logoutAction } from "@/services/loginService";
 
 type Variant = "header" | "mobile" | "desktop";
 

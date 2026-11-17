@@ -4,14 +4,15 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
 import { UserPlus } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { BASE } from "@/services/API_BASE_URL";
 import { signupSchema, SignupValues } from "@/schemas/auth";
 import { toast } from "sonner";
-
+import { signupActions } from "@/services/signupService";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const labelClass = "mb-2 block text-sm font-medium text-gray-900";
 const inputClass =
@@ -23,7 +24,13 @@ export default function SignupForm() {
   const router = useRouter();
   const [serverMessage, setServerMessage] = useState("");
 
-  const { register, handleSubmit, control, setError, formState: { errors, isSubmitting }, } = useForm<SignupValues>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupValues>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -33,6 +40,7 @@ export default function SignupForm() {
       terms: false,
     },
   });
+
   const password = useWatch({ control, name: "password" }) ?? "";
   const strength =
     password.length < 8
@@ -41,50 +49,19 @@ export default function SignupForm() {
         ? { label: "Strong", percent: 100 }
         : { label: "Fair", percent: 60 };
 
-  // onSubmit function to handle form submission
   const onSubmit = async (values: SignupValues) => {
     setServerMessage("");
-    const parsed = signupSchema.safeParse(values);
-    if (!parsed.success) {
-      for (const issue of parsed.error.issues) {
-        const field = issue.path[0] as keyof SignupValues;
-        setError(field, { type: "manual", message: issue.message });
-      }
+
+    const res = await signupActions(values);
+
+    if (!res.success) {
+      setServerMessage(res.message);
+      toast.error(res.message);
       return;
     }
 
-    try {
-      const res = await fetch(`${BASE}/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: values.name.trim(),
-          email: values.email.trim(),
-          password: values.password,
-          rePassword: values.rePassword,
-          phone: values.phone.trim().replace(/[\s()-]/g, ""),
-        }),
-      });
-      
-      const result = await res.json().catch(() => null);
-
-      // Error handling
-      if (!res.ok)
-        throw new Error(
-          result?.message || "Could not create your account. Please try again.",
-        );
-
-      toast.success("Account created successfully! Please log in.");
-      setServerMessage("Your account was created. You can now sign in.");
-      router.push("/login");
-    } catch (error) {
-      toast.error("Error Creating Account!!");
-      setServerMessage(
-        error instanceof Error
-          ? error.message
-          : "Unable to connect. Please try again.",
-      );
-    }
+    toast.success("Signed up successfully, please log in.");
+    router.push("/login");
   };
 
   const errorText = (message?: string) =>

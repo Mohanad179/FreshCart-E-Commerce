@@ -30,6 +30,7 @@ import {
 import logo from "@/assets/images/navlogo.png";
 import NavbarAuthActions from "@/components/layout/NavbarAuthActions";
 import { cookies } from "next/headers";
+import { getAllCategories } from "@/services/categories";
 
 const links = [
   { label: "Home", href: "/" },
@@ -37,16 +38,9 @@ const links = [
   { label: "Brands", href: "/brands" },
 ];
 
-const categories = [
-  { label: "All Categories", href: "/shop" },
-  { label: "Electronics", href: "/shop?category=electronics" },
-  { label: "Women's Fashion", href: "/shop?category=womens-fashion" },
-  { label: "Men's Fashion", href: "/shop?category=mens-fashion" },
-  { label: "Beauty & Health", href: "/shop?category=beauty-health" },
-];
-
 export default async function Navbar() {
   const isLoggedIn = Boolean((await cookies()).get("token")?.value);
+  const categories = (await getAllCategories()) ?? [];
   return (
     <>
       <header className="w-full bg-background">
@@ -107,13 +101,16 @@ export default async function Navbar() {
               <p className="mt-4 px-3 text-xs font-semibold text-muted-foreground">
                 Categories
               </p>
+              <Link href="/shop" className="rounded-md px-3 py-2 text-sm">
+                All Categories
+              </Link>
               {categories.map((c) => (
                 <Link
-                  key={c.label}
-                  href={c.href}
+                  key={c._id}
+                  href={`/shop?category=${encodeURIComponent(c._id)}`}
                   className="rounded-md px-3 py-2 text-sm"
                 >
-                  {c.label}
+                  {c.name}
                 </Link>
               ))}
               <NavbarAuthActions variant="mobile" isLoggedIn={isLoggedIn} />
@@ -153,9 +150,12 @@ export default async function Navbar() {
               <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56 p-2">
+              <DropdownMenuItem className="py-2.5" nativeButton={false} render={<Link href="/shop" />}>
+                All Categories
+              </DropdownMenuItem>
               {categories.map((c) => (
-                <DropdownMenuItem key={c.label} className="py-2.5">
-                  <Link href={c.href}>{c.label}</Link>
+                <DropdownMenuItem key={c._id} className="py-2.5" nativeButton={false} render={<Link href={`/shop?category=${encodeURIComponent(c._id)}`} />}>
+                  {c.name}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
