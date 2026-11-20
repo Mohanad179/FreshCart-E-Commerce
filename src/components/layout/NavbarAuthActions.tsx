@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogOut, User, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -15,16 +17,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { logoutAction } from "@/services/loginService";
 
 type Variant = "header" | "mobile" | "desktop";
 
-export default function NavbarAuthActions({ variant, isLoggedIn }: { variant: Variant; isLoggedIn: boolean }) {
+export default function NavbarAuthActions({ variant }: { variant: Variant }) {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated" && Boolean(session?.user);
 
   const logout = async () => {
-    await logoutAction();
+    await signOut({ redirect: false });
     setIsLogoutDialogOpen(false);
     router.push("/");
     router.refresh();

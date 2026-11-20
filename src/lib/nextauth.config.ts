@@ -1,53 +1,46 @@
-import { loginSchema } from "@/schemas/auth";
-import { BASE } from "@/services/API_BASE_URL";
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { loginRequest } from "@/services/loginService";
 
 export const nextAuthConfig: NextAuthOptions = {
   providers: [
-    // providers take options that are required, and the first one is the 'Credentials'
     Credentials({
       name: "FreshCart",
-
       credentials: {
-        email: { placeholder: "name@example.com" },
-        password: { placeholder: "*******" },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-
       async authorize(credentials) {
+        // safe checking for missing credentials, though NextAuth should prevent this from happening
+        if (!credentials?.email || !credentials.password) return null;
 
-        const parsed = loginSchema.safeParse(values);
-        if (!parsed.success) {
-          return { success: false, message: "Invalid email or password format." };
+        try {
+          // Call the login service to validate credentials and get user data
+          return await loginRequest(credentials.email, credentials.password);
+        } catch {
+          // Returning null tells NextAuth that these credentials were rejected.
+          return null;
         }
-
-        const res = await fetch(`${BASE}/auth/signin`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: parsed.data.email.trim(),
-            password: parsed.data.password,
-          }),
-          cache: "no-store",
-        });
-
-        const result = await res.json();
-
-        if (!res.ok) {
-          return {
-            success: false,
-            message: result?.message || "Email or password is incorrect.",
-          };
-        }
-
-        if (!result?.token) {
-          return {
-            success: false,
-            message: "Signed in, but no authentication token was returned.",
-          };
-        }
-        return null;
       },
     }),
   ],
+  session: { strategy: "jwt" },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.accessToken = user.accessToken;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+      }
+      session.accessToken = token.accessToken;
+      return session;
+    },
+  },
 };

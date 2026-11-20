@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Navbar from "../components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "sonner";
+import AuthProvider from "@/components/auth/AuthProvider";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
 const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage" });
@@ -22,10 +23,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="font-sans antialiased overflow-x-clip">
 
-        <Navbar/>
-        {children}
-        <Toaster position="top-right" theme="light" richColors />
-        <Footer/>
+        <AuthProvider>
+          <Navbar />
+          {children}
+          <Toaster position="top-right" theme="light" richColors />
+          <Footer />
+        </AuthProvider>
 
       </body>
     </html>

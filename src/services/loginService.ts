@@ -1,53 +1,55 @@
-"use server";
-import { cookies } from "next/headers";
 import { BASE } from "@/services/API_BASE_URL";
-import { loginSchema, LoginValues } from "@/schemas/auth";
 
-export type LoginResult = { success: true } | { success: false; message: string };
+export type LoginUser = {
+  // NextAuth requires an id; the API does not return one, so use the email.
+  id: string;
+  name: string;
+  email: string;
+  role?: string;
+  accessToken: string;
+};
 
-export async function logoutAction(): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.delete("token");
-}
+type LoginApiResponse = {
+  message: string;
+  token: string;
+  user: {
+    name: string;
+    email: string;
+    role?: string;
+  };
+};
 
-export async function loginActions(values: LoginValues): Promise<LoginResult> {
-  const parsed = loginSchema.safeParse(values);
-  if (!parsed.success) {
-    return { success: false, message: "Invalid email or password format." };
-  }
+// Checks the credentials with the store API. NextAuth calls this from authorize().
+export async function loginRequest(email: string, password: string): Promise<LoginUser> {
+  let response: Response;
 
   try {
-    const res = await fetch(`${BASE}/auth/signin`, {
+    response = await fetch(`${BASE}/auth/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: parsed.data.email.trim(),
-        password: parsed.data.password,
-      }),
+      body: JSON.stringify({ email: email.trim(), password }),
       cache: "no-store",
     });
-
-    const result = await res.json().catch(() => null);
-
-    if (!res.ok) {
-      return { success: false, message: result?.message || "Email or password is incorrect." };
-    }
-
-    if (!result?.token) {
-      return { success: false, message: "Signed in, but no authentication token was returned." };
-    }
-
-    const cookieStore = await cookies();
-    cookieStore.set("token", result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      ...(parsed.data.remember ? { maxAge: 60 * 60 * 24 * 30 } : {}),
-    });
-
-    return { success: true };
   } catch {
-    return { success: false, message: "Unable to connect. Please try again." };
+    throw new Error("Unable to connect. Please try again.");
   }
+
+  // the final response of the endpoint
+  const result = (await response.json().catch(() => null)) as LoginApiResponse | null;
+
+  if (!response.ok) {
+    throw new Error(result?.message || "Email or password is incorrect.");
+  }
+
+  if (!result?.token || !result?.user?.email || !result.user.name) {
+    throw new Error("The login response was incomplete. Please try again.");
+  }
+
+  return {
+    id: result.user.email,
+    name: result.user.name,
+    email: result.user.email,
+    role: result.user.role,
+    accessToken: result.token,
+  };
 }

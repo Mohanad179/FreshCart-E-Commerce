@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/sheet";
 import logo from "@/assets/images/navlogo.png";
 import NavbarAuthActions from "@/components/layout/NavbarAuthActions";
-import { cookies } from "next/headers";
 import { getAllCategories } from "@/services/categories";
 
 const links = [
@@ -39,7 +38,6 @@ const links = [
 ];
 
 export default async function Navbar() {
-  const isLoggedIn = Boolean((await cookies()).get("token")?.value);
   const categories = (await getAllCategories()) ?? [];
   return (
     <>
@@ -62,7 +60,7 @@ export default async function Navbar() {
             <span className="flex items-center gap-2">
               <Mail className="size-4 text-primary" /> support@freshcart.com
             </span>
-            <NavbarAuthActions variant="header" isLoggedIn={isLoggedIn} />
+            <NavbarAuthActions variant="header" />
           </div>
         </div>
       </div>
@@ -113,7 +111,7 @@ export default async function Navbar() {
                   {c.name}
                 </Link>
               ))}
-              <NavbarAuthActions variant="mobile" isLoggedIn={isLoggedIn} />
+              <NavbarAuthActions variant="mobile" />
             </nav>
           </SheetContent>
         </Sheet>
@@ -192,7 +190,7 @@ export default async function Navbar() {
           >
             <ShoppingCart className="size-6" />
           </Button>
-          <NavbarAuthActions variant="desktop" isLoggedIn={isLoggedIn} />
+          <NavbarAuthActions variant="desktop" />
         </div>
       </div>
       </div>

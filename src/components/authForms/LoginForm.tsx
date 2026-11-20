@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
 import { LoginValues } from "@/schemas/auth";
+import { loginSchema } from "@/schemas/auth";
 import { toast } from "sonner";
-import { loginActions } from "@/services/loginService";
-
-
+import { signIn } from "next-auth/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const inputWrapper = "relative flex items-center";
 
@@ -31,25 +31,36 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "", remember: false },
   });
 
   // onSubmit function to handle form submission
   const onSubmit = async (values: LoginValues) => {
     setServerMessage("");
-     startTransition(async () => {
-    const res = await loginActions(values);
+    try {
+      const result = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
 
-    if (!res.success) {
-      setServerMessage(res.message);
-      toast.error(res.message);
-      return;
+      if (!result || result.error) {
+        const message = "Email or password is incorrect.";
+        setServerMessage(message);
+        toast.error(message);
+        return;
+      }
+
+      toast.success("Login successful!");
+      // redirect to the home page after successful login
+      router.push("/");
+      router.refresh();
+    } catch {
+      const message = "Unable to sign in. Please try again.";
+      setServerMessage(message);
+      toast.error(message);
     }
-
-    toast.success("Login successful!");
-    router.push("/");
-    router.refresh();
-  });
   };
 
   const errorText = (message?: string) =>
