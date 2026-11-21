@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { loginRequest } from "@/services/loginService";
 
 export const nextAuthConfig: NextAuthOptions = {
+
   providers: [
     Credentials({
       name: "FreshCart",
@@ -10,6 +11,7 @@ export const nextAuthConfig: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+      
       async authorize(credentials) {
         // safe checking for missing credentials, though NextAuth should prevent this from happening
         if (!credentials?.email || !credentials.password) return null;
@@ -24,7 +26,10 @@ export const nextAuthConfig: NextAuthOptions = {
       },
     }),
   ],
+
   session: { strategy: "jwt" },
+  secret: process.env.BETTER_AUTH_SECRET,
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -43,4 +48,5 @@ export const nextAuthConfig: NextAuthOptions = {
       return session;
     },
   },
+
 };
