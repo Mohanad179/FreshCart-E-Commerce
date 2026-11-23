@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Check,
-  LockKeyhole,
   ShieldCheck,
   ShoppingBag,
   Tag,
@@ -143,9 +142,9 @@ export default async function Cart() {
               <Tag className="size-4" /> Apply Promo Code
             </button>
 
-            <button type="button" className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-700 text-base font-semibold text-white shadow-md shadow-emerald-700/15 hover:brightness-105">
-              <LockKeyhole className="size-4" /> Secure Checkout
-            </button>
+            <Link href="/checkout" className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-700 text-base font-semibold text-white shadow-md shadow-emerald-700/15 hover:brightness-105">
+              Secure Checkout
+            </Link>
 
             <div className="flex items-center justify-center gap-2.5 text-xs text-slate-500">
               <span className="inline-flex items-center gap-1"><ShieldCheck className="size-3.5 text-emerald-500" /> Secure Payment</span>
