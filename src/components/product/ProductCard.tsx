@@ -2,6 +2,7 @@ import { Product } from "@/types/types";
 import Image from "next/image";
 import { Eye, Heart, Plus, RefreshCw, Star } from "lucide-react";
 import Link from "next/link";
+import AddToCartBtn from "../cartActions/AddToCartBtn";
 
 export default function ProductCard({ product }: { product: Product }) {
 
@@ -56,9 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="flex items-center justify-between pt-2">
           <h3 className="text-lg font-bold">{product.price} EGP</h3>
-          <button className="rounded-full cursor-pointer bg-primary p-2 text-primary-foreground hover:bg-primary/90">
-            <Plus size={20} />
-          </button>
+          <AddToCartBtn productId={product.id}/>
         </div>
       </div>
     </div>

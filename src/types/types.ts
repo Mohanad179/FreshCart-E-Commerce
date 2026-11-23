@@ -28,3 +28,24 @@ export interface Product {
   brand: Brand;
   category: Category;
 }
+
+export type CartProduct = {
+  _id: string;
+  title: string;
+  imageCover: string;
+  quantity: number;
+  category?: { name?: string };
+};
+
+export type CartLine = {
+  _id: string;
+  count: number;
+  price: number;
+  product: CartProduct;
+};
+
+export type CartData = {
+  products: CartLine[];
+  totalCartPrice: number;
+  numOfCartItems: number;
+};

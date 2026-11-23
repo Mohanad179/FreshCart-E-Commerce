@@ -17,9 +17,10 @@ interface SliderProps {
   slides: SlideItem[],
   spaceBetween?: number;
   slidesPerView?: number;
+  imageOnly?: boolean;
 }
 
-export default function Slider({slides, spaceBetween = 50, slidesPerView = 3,}: SliderProps) {
+export default function Slider({slides, spaceBetween = 50, slidesPerView = 3, imageOnly = false,}: SliderProps) {
 
   const arrowStyles = [
     "[--swiper-navigation-color:var(--primary)]",
@@ -38,22 +39,23 @@ export default function Slider({slides, spaceBetween = 50, slidesPerView = 3,}: 
 
   return (
     <Swiper
-      className={arrowStyles}
+      className={`${arrowStyles} ${imageOnly ? "[&_.swiper-button-prev]:hidden [&_.swiper-button-next]:hidden" : ""}`}
       modules={[Navigation, Pagination]}
-      loop
+      loop={slides.length > 1}
       spaceBetween={spaceBetween}
       slidesPerView={slidesPerView}
       // give the slider navifation a margin
-      navigation
-      pagination={{ clickable: true, bulletActiveClass: "bg-white! opacity-100! w-5! rounded-2xl!"}}
+      navigation={!imageOnly}
+      pagination={{ clickable: true, bulletActiveClass: `${imageOnly ? "bg-primary!" : "bg-white!"} opacity-100! w-5! rounded-2xl!`}}
       scrollbar={{ draggable: true }}
     >
 
 
       {slides.map((slide, index) => (
         <SwiperSlide key={`${slide.image}-${index}`}>
-          <div className="relative h-100 w-full">
-            <img src={slide.image} alt={slide.title} className="h-full w-full object-cover" />
+          <div className={`relative w-full ${imageOnly ? "aspect-square bg-gray-50" : "h-100"}`}>
+            <img src={slide.image} alt={slide.title} className={`h-full w-full ${imageOnly ? "object-contain" : "object-cover"}`} />
+            {!imageOnly && <>
             {/* dark tint */}
             <div className="absolute inset-0 bg-black/60" />
             {/* slide text */}
@@ -69,6 +71,7 @@ export default function Slider({slides, spaceBetween = 50, slidesPerView = 3,}: 
                 </a>
               )}
             </div>
+            </>}
           </div>
         </SwiperSlide>
 ))}

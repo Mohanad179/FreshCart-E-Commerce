@@ -18,6 +18,7 @@ async function cartRequest(path: string, method: string, body?: object) {
 
     const data = await res.json();
     if (!res.ok) return { success: false, message: data?.message ?? "Request failed" };
+    
     return { success: true, data };
   } catch {
     return { success: false, message: "Something went wrong" };

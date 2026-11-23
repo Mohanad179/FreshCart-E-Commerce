@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   Home,
@@ -18,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { getProductById } from "@/services/products";
 import { notFound } from "next/navigation";
 import FeaturesStrip from "@/components/shared/FeaturesStrip";
+import Slider from "@/components/shared/Slider";
 
 export default async function Page({params}: {
   params: Promise<{ id: string }>;
@@ -52,43 +52,22 @@ export default async function Page({params}: {
         <span className="font-medium text-gray-900">{product.title}</span>
       </nav>
 
-      <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         {/* Gallery */}
-        <div className="h-fit rounded-xl border bg-white p-4 shadow-sm">
-          <div className="relative aspect-2/3 w-full bg-gray-200">
-            <Image
-              src={product.images[0]}
-              alt={product.title}
-              fill
-              priority
-              sizes="(min-width: 1024px) 420px, 100vw"
-              className="object-contain"
-            />
-          </div>
-          <div className="mt-3 grid grid-cols-3 gap-3">
-            {product.images.map((src: string, i: number) => (
-              <button
-                key={src}
-                type="button"
-                aria-label={`Show image ${i + 1}`}
-                className={`relative aspect-square border-2 bg-gray-200 ${
-                  i === 0 ? "border-blue-600" : "border-transparent"
-                }`}
-              >
-                <Image
-                  src={src}
-                  alt=""
-                  fill
-                  sizes="120px"
-                  className="object-cover"
-                />
-              </button>
-            ))}
-          </div>
+        <div className="min-w-0 overflow-hidden rounded-xl border bg-white p-3 shadow-sm sm:p-4">
+          <Slider
+            imageOnly
+            slidesPerView={1}
+            spaceBetween={0}
+            slides={(product.images?.length ? product.images : [product.imageCover]).map((image) => ({
+              image,
+              title: product.title,
+            }))}
+          />
         </div>
 
         {/* Info */}
-        <div className="rounded-xl border bg-white p-5 shadow-sm sm:p-8">
+        <div className="min-w-0 rounded-xl border bg-white p-5 shadow-sm sm:p-6">
           <div className="flex flex-wrap gap-2 text-sm">
             <span className="rounded-full bg-green-50 px-4 py-1.5 text-primary">
               {product.category.name}
@@ -98,7 +77,7 @@ export default async function Page({params}: {
             </span>
           </div>
 
-          <h1 className="mt-5 text-2xl font-bold sm:text-4xl">
+          <h1 className="mt-4 text-xl font-bold leading-snug sm:text-2xl">
             {product.title}
           </h1>
 
@@ -107,7 +86,7 @@ export default async function Page({params}: {
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star
                   key={i}
-                  className={`size-5 text-yellow-400 ${
+                  className={`size-4 text-yellow-400 ${
                     i <= Math.round(product.ratingsAverage)
                       ? "fill-yellow-400"
                       : ""
@@ -121,7 +100,7 @@ export default async function Page({params}: {
           </div>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <span className="text-3xl font-bold sm:text-4xl">
+            <span className="text-2xl font-bold sm:text-3xl">
               {unitPrice} EGP
             </span>
             {discount > 0 && (
@@ -148,7 +127,7 @@ export default async function Page({params}: {
           </span>
 
           <hr className="my-6" />
-          <p className="text-gray-700">{product.description}</p>
+          <p className="text-sm leading-6 text-gray-700">{product.description}</p>
 
           <p className="mb-2 mt-6 text-sm font-medium">Quantity</p>
           <div className="flex items-center gap-4">
@@ -156,7 +135,7 @@ export default async function Page({params}: {
               <button
                 type="button"
                 aria-label="Decrease quantity"
-                className="p-4"
+                className="p-3"
               >
                 <Minus className="size-4" />
               </button>
@@ -164,7 +143,7 @@ export default async function Page({params}: {
               <button
                 type="button"
                 aria-label="Increase quantity"
-                className="p-4"
+                className="p-3"
               >
                 <Plus className="size-4" />
               </button>
@@ -174,7 +153,7 @@ export default async function Page({params}: {
             </span>
           </div>
 
-          <div className="mt-6 flex items-center justify-between rounded-lg bg-gray-50 px-5 py-5">
+          <div className="mt-6 flex items-center justify-between rounded-lg bg-gray-50 px-4 py-4">
             <span className="text-gray-700">Total Price:</span>
             <span className="text-xl font-bold text-primary sm:text-2xl">
               {unitPrice.toFixed(2)} EGP
@@ -182,12 +161,12 @@ export default async function Page({params}: {
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <Button disabled={!inStock} className="h-14 rounded-xl text-base cursor-pointer">
+            <Button disabled={!inStock} className="h-12 rounded-xl text-sm cursor-pointer">
               <ShoppingCart className="size-5" /> Add to Cart
             </Button>
             <Button
               disabled={!inStock}
-              className="h-14 rounded-xl bg-slate-900 text-base hover:bg-slate-800 cursor-pointer"
+              className="h-12 rounded-xl bg-slate-900 text-sm hover:bg-slate-800 cursor-pointer"
             >
               <Zap className="size-5" /> Buy Now
             </Button>
@@ -196,14 +175,14 @@ export default async function Page({params}: {
           <div className="mt-3 flex gap-3">
             <Button
               variant="outline"
-              className="h-14 flex-1 rounded-xl text-base cursor-pointer"
+              className="h-12 flex-1 rounded-xl text-sm cursor-pointer"
             >
               <Heart className="size-5" /> Add to Wishlist
             </Button>
             <Button
               variant="outline"
               aria-label="Share"
-              className="size-14 rounded-xl"
+              className="size-12 rounded-xl"
             >
               <Share2 className="size-5" />
             </Button>

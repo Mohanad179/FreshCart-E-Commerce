@@ -6,11 +6,14 @@ export default async function getMyToken() {
   const raw =
     cookieStore.get("__Secure-next-auth.session-token")?.value ??
     cookieStore.get("next-auth.session-token")?.value;
-  if (!raw) return null;
+  const secret = process.env.BETTER_AUTH_SECRET;
+  if (!raw || !secret) return null;
 
-  const decoded = await decode({
-    token: raw,
-    secret: process.env.NEXTAUTH_SECRET!,
-  });
-  return decoded?.token ?? null; // adjust to whatever your jwt callback stores
+  try {
+    const decoded = await decode({ token: raw, secret });
+    return typeof decoded?.accessToken === "string" ? decoded.accessToken : null;
+  } catch {
+    return null;
+  }
+
 }
