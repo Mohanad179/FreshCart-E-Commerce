@@ -13,6 +13,7 @@ import { CartData } from "@/types/types";
 import RemoveCartItem from "@/components/cartActions/RemoveCartItem";
 import ClearCart from "@/components/cartActions/ClearCart";
 import UpdateCartItemQuantity from "@/components/cartActions/UpdateCartItemQuantity";
+import FeaturesStrip from "@/components/shared/FeaturesStrip";
 
 const money = (amount: number) => new Intl.NumberFormat("en-US").format(amount);
 
@@ -25,7 +26,7 @@ export default async function Cart() {
   const itemCount = cart?.numOfCartItems ?? items.length;
 
   return (
-    <main className="min-h-[60vh] bg-gray-50/70 px-4 py-6 sm:px-6 lg:py-8">
+    <main className="min-h-[60vh] bg-gray-50/70 px-4 pt-6 pb-0 sm:px-6 lg:pt-8">
       <div className="mx-auto grid max-w-7xl items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] lg:gap-5">
         <section aria-label="Shopping cart items" className="min-w-0 space-y-3">
           {items.length > 0 ? (
@@ -79,7 +80,7 @@ export default async function Cart() {
                     </div>
                   </div>
 
-                  <RemoveCartItem productId={product._id} />
+                <RemoveCartItem productId={product.id}/>
                 </article>
               );
             })
@@ -158,6 +159,8 @@ export default async function Cart() {
           </div>
         </aside>
       </div>
+
+      <FeaturesStrip/>
     </main>
   );
 }

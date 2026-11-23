@@ -6,7 +6,6 @@ export default async function proxy(req: NextRequest){
 
 
     const jwt = await getToken({req, secret: process.env.BETTER_AUTH_SECRET});
-    console.log("jwt from proxy: ", jwt);
 
     if(jwt == null){
         return NextResponse.redirect(new URL("/login", req.url));

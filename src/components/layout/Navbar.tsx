@@ -4,7 +4,6 @@ import {
   ChevronDown,
   Gift,
   Headphones,
-  Heart,
   Mail,
   Menu,
   Phone,
@@ -170,16 +169,6 @@ export default async function Navbar() {
               <p className="text-sm font-semibold">24/7 Help</p>
             </div>
           </div>
-          <Button
-            className="hover:text-primary"
-            nativeButton={false}
-            variant="ghost"
-            size="icon"
-            aria-label="Wishlist"
-            render={<Link href="/wishlist" />}
-          >
-            <Heart className="size-6" />
-          </Button>
           <Button
             className="hover:text-primary"
             nativeButton={false}
