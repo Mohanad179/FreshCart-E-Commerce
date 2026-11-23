@@ -3,21 +3,15 @@ import {
   Home,
   ChevronRight,
   Star,
-  Minus,
-  Plus,
-  ShoppingCart,
-  Zap,
-  Heart,
-  Share2,
   Package,
   Truck,
   Check,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { getProductById } from "@/services/products";
 import { notFound } from "next/navigation";
 import FeaturesStrip from "@/components/shared/FeaturesStrip";
 import Slider from "@/components/shared/Slider";
+import ProductDetailsActions from "@/components/cartActions/ProductDetailsActions";
 
 export default async function Page({params}: {
   params: Promise<{ id: string }>;
@@ -129,64 +123,12 @@ export default async function Page({params}: {
           <hr className="my-6" />
           <p className="text-sm leading-6 text-gray-700">{product.description}</p>
 
-          <p className="mb-2 mt-6 text-sm font-medium">Quantity</p>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center rounded-lg border">
-              <button
-                type="button"
-                aria-label="Decrease quantity"
-                className="p-3"
-              >
-                <Minus className="size-4" />
-              </button>
-              <span className="w-12 text-center font-medium">1</span>
-              <button
-                type="button"
-                aria-label="Increase quantity"
-                className="p-3"
-              >
-                <Plus className="size-4" />
-              </button>
-            </div>
-            <span className="text-sm text-gray-500">
-              {product.quantity} available
-            </span>
-          </div>
+          <ProductDetailsActions
+            productId={product.id}
+            availableQuantity={product.quantity}
+            unitPrice={unitPrice}
+          />
 
-          <div className="mt-6 flex items-center justify-between rounded-lg bg-gray-50 px-4 py-4">
-            <span className="text-gray-700">Total Price:</span>
-            <span className="text-xl font-bold text-primary sm:text-2xl">
-              {unitPrice.toFixed(2)} EGP
-            </span>
-          </div>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <Button disabled={!inStock} className="h-12 rounded-xl text-sm cursor-pointer">
-              <ShoppingCart className="size-5" /> Add to Cart
-            </Button>
-            <Button
-              disabled={!inStock}
-              className="h-12 rounded-xl bg-slate-900 text-sm hover:bg-slate-800 cursor-pointer"
-            >
-              <Zap className="size-5" /> Buy Now
-            </Button>
-          </div>
-
-          <div className="mt-3 flex gap-3">
-            <Button
-              variant="outline"
-              className="h-12 flex-1 rounded-xl text-sm cursor-pointer"
-            >
-              <Heart className="size-5" /> Add to Wishlist
-            </Button>
-            <Button
-              variant="outline"
-              aria-label="Share"
-              className="size-12 rounded-xl"
-            >
-              <Share2 className="size-5" />
-            </Button>
-          </div>
         </div>
       </div>
 

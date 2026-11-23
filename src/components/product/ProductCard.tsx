@@ -1,6 +1,6 @@
 import { Product } from "@/types/types";
 import Image from "next/image";
-import { Eye, Heart, Plus, RefreshCw, Star } from "lucide-react";
+import { Eye, Heart, RefreshCw, Star } from "lucide-react";
 import Link from "next/link";
 import AddToCartBtn from "../cartActions/AddToCartBtn";
 
@@ -21,12 +21,6 @@ export default function ProductCard({ product }: { product: Product }) {
           className="object-contain"
         />
         <div className="absolute right-0 top-0 flex flex-col gap-2">
-          <button type="button" aria-label="Add to wishlist" className={iconBtn}>
-            <Heart size={16} />
-          </button>
-          <button type="button" aria-label="Compare product" className={iconBtn}>
-            <RefreshCw size={16} />
-          </button>
           <Link href={`/product/${product.id}`} aria-label="View details" className={iconBtn}>
             <Eye size={16} />
           </Link>
