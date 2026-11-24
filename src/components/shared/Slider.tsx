@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -53,19 +54,26 @@ export default function Slider({slides, spaceBetween = 50, slidesPerView = 3, im
 
       {slides.map((slide, index) => (
         <SwiperSlide key={`${slide.image}-${index}`}>
-          <div className={`relative w-full ${imageOnly ? "aspect-square bg-gray-50" : "h-100"}`}>
-            <img src={slide.image} alt={slide.title} className={`h-full w-full ${imageOnly ? "object-contain" : "object-cover"}`} />
+          <div className={`relative w-full ${imageOnly ? "aspect-square bg-gray-50" : "h-[320px] sm:h-[420px] lg:h-[520px]"}`}>
+            <Image
+              src={slide.image}
+              alt={slide.title}
+              fill
+              priority={!imageOnly && index === 0}
+              sizes="100vw"
+              className={imageOnly ? "object-contain" : "object-cover"}
+            />
             {!imageOnly && <>
             {/* dark tint */}
             <div className="absolute inset-0 bg-black/60" />
             {/* slide text */}
-            <div className="absolute inset-0 flex flex-col items-start justify-center gap-3 px-16 text-white">
-              <h2 className="text-4xl font-bold">{slide.title}</h2>
-              {slide.subtitle && <p className="max-w-md text-lg">{slide.subtitle}</p>}
+            <div className="absolute inset-0 flex flex-col items-start justify-center gap-3 px-12 text-white sm:px-16">
+              <h2 className="max-w-3xl text-2xl font-bold leading-tight sm:text-4xl">{slide.title}</h2>
+              {slide.subtitle && <p className="max-w-md text-sm sm:text-lg">{slide.subtitle}</p>}
               {slide.buttonText && (
                 <a
                   href={slide.href ?? "#"}
-                  className="mt-2 rounded-md bg-primary px-6 py-2 font-medium text-white"
+                  className="mt-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white sm:px-6 sm:py-2 sm:text-base"
                 >
                   {slide.buttonText}
                 </a>

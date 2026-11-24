@@ -1,6 +1,6 @@
 import { Product } from "@/types/types";
 import Image from "next/image";
-import { Eye, Heart, RefreshCw, Star } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 import Link from "next/link";
 import AddToCartBtn from "../cartActions/AddToCartBtn";
 

@@ -27,6 +27,7 @@ export interface Product {
   sold: number;
   brand: Brand;
   category: Category;
+  subcategory?: Category[];
 }
 
 export type CartProduct = {
@@ -54,6 +55,7 @@ export type CartData = {
 export type CartContextValue = {
   numberOfCartItems: number;
   refreshCartCount: () => Promise<void>;
+  resetCartCount: () => void;
 };
 
 export interface ShippingAddressType {

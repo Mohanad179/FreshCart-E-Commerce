@@ -43,7 +43,7 @@ export default function PageHeader({
           </div>
           <div>
             <h1 className="text-2xl font-bold md:text-4xl">{title}</h1>
-            <p className="mt-1 text-xm md:text-base opacity-90">{description}</p>
+            <p className="mt-1 text-xs opacity-90 sm:text-sm md:text-base">{description}</p>
           </div>
         </div>
       </div>

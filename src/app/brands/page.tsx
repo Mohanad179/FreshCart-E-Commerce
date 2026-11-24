@@ -4,9 +4,8 @@ import { Tags } from 'lucide-react';
 import { getAllBrands } from '@/services/brands';
 import BrandCard from '@/components/brand/BrandCard';
 
-const allBrands = await getAllBrands();
-
 export default async function Brands() {
+  const allBrands = await getAllBrands();
   return <>
     <PageHeader
       gradient='from-orange-600 to-orange-400'

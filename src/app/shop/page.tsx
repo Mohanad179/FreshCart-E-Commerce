@@ -4,7 +4,6 @@ import ProductsGrid from '@/components/product/ProductsGrid';
 import PageHeader from '@/components/shared/PageHeader';
 import { Package } from 'lucide-react';
 import { getAllCategories } from '@/services/categories';
-import getMyToken from '@/utils/getMyToken';
 
 type ShopPageProps = {
   searchParams: Promise<{ category?: string | string[] }>;

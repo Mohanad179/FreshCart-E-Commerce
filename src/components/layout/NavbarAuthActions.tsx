@@ -7,6 +7,7 @@ import { LogOut, User, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import { useCart } from "@/components/providers/CartContextProvider";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -24,10 +25,12 @@ export default function NavbarAuthActions({ variant }: { variant: Variant }) {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { resetCartCount } = useCart();
   const isLoggedIn = status === "authenticated" && Boolean(session?.user);
 
   const logout = async () => {
     await signOut({ redirect: false });
+    resetCartCount();
     setIsLogoutDialogOpen(false);
     router.push("/");
     router.refresh();

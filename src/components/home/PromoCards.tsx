@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const promos = [
     // promo card 1
@@ -46,7 +45,7 @@ export default function PromoCards() {
               <span className="inline-flex items-center rounded-full bg-white/20 px-4 py-1.5 text-sm font-medium">
                 {p.badge}
               </span>
-              <h3 className="mt-5 text-3xl font-bold">{p.title}</h3>
+              <h3 className="mt-5 text-2xl font-bold sm:text-3xl">{p.title}</h3>
               <p className="mt-2 text-white/90">{p.description}</p>
 
               <div className="mt-5 flex items-baseline gap-4">
@@ -58,7 +57,7 @@ export default function PromoCards() {
 
               <Link
                 href={p.href}
-                className={`mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3.5 text-sm md-text-base font-semibold whitespace-nowrap transition hover:bg-white/90 ${p.btnText}`}
+                className={`mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3.5 text-sm font-semibold whitespace-nowrap transition hover:bg-white/90 sm:text-base ${p.btnText}`}
               >
                 {p.cta}
                 <ArrowRight className="size-5" />

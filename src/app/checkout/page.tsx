@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   Banknote,
   Check,
-  CreditCard,
   LockKeyhole,
   MapPin,
   ShieldCheck,
@@ -81,7 +80,7 @@ export default async function CheckoutPage() {
 
               <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                 <div className="bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-3 text-white">
-                  <h2 className="flex items-center gap-2 text-lg font-bold"><CreditCard className="size-4" /> Payment Method</h2>
+                  <h2 className="flex items-center gap-2 text-lg font-bold"><Banknote className="size-4" /> Payment Method</h2>
                   <p className="mt-1 text-sm text-emerald-50">Choose how you’d like to pay</p>
                 </div>
                 <div className="space-y-3 p-4 sm:p-5">

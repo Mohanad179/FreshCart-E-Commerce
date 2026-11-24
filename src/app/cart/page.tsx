@@ -80,7 +80,7 @@ export default async function Cart() {
                     </div>
                   </div>
 
-                <RemoveCartItem productId={product.id}/>
+                <RemoveCartItem productId={product._id}/>
                 </article>
               );
             })
