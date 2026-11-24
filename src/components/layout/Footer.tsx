@@ -139,6 +139,17 @@ export default function Footer() {
       <div className="border-t border-slate-800">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-6 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} FreshCart. All rights reserved.</p>
+          <p>
+            Made by{" "}
+            <a
+              href="https://github.com/Mohanad179"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-slate-200 transition-colors hover:text-primary"
+            >
+              Mohanad
+            </a>
+          </p>
           <ul className="flex flex-col gap-3 sm:flex-row sm:gap-6">
             {payments.map((name) => (
               <li key={name} className="flex items-center gap-2">
