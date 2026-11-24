@@ -6,7 +6,7 @@ export default async function getMyToken() {
   const raw =
     cookieStore.get("__Secure-next-auth.session-token")?.value ??
     cookieStore.get("next-auth.session-token")?.value;
-  const secret = process.env.BETTER_AUTH_SECRET;
+  const secret = process.env.NEXTAUTH_SECRET;
   if (!raw || !secret) return null;
 
   try {
