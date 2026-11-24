@@ -51,7 +51,7 @@ export default async function CheckoutPage() {
           <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] lg:gap-5">
             <div className="space-y-4">
               <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                <div className="bg-linear-to from-emerald-600 to-green-700 px-4 py-3 text-white">
+                <div className="bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-3 text-white">
                   <h2 className="flex items-center gap-2 text-lg font-bold"><MapPin className="size-4" /> Shipping Address</h2>
                   <p className="mt-1 text-sm text-emerald-50">Where should we deliver your order?</p>
                 </div>
@@ -78,7 +78,7 @@ export default async function CheckoutPage() {
               </section>
 
               <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-                <div className="bg-linear-to from-emerald-600 to-green-700 px-4 py-3 text-white">
+                <div className="bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-3 text-white">
                   <h2 className="flex items-center gap-2 text-lg font-bold"><CreditCard className="size-4" /> Payment Method</h2>
                   <p className="mt-1 text-sm text-emerald-50">Choose how you’d like to pay</p>
                 </div>
@@ -103,7 +103,7 @@ export default async function CheckoutPage() {
             </div>
 
             <aside className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm lg:sticky lg:top-5">
-              <div className="bg-linear-to from-emerald-600 to-green-700 px-4 py-3 text-white">
+              <div className="bg-gradient-to-r from-emerald-600 to-green-700 px-4 py-3 text-white">
                 <h2 className="flex items-center gap-2 text-lg font-bold"><LockKeyhole className="size-4" /> Order Summary</h2>
                 <p className="mt-1 text-sm text-emerald-50">{itemCount} items</p>
               </div>
@@ -129,7 +129,7 @@ export default async function CheckoutPage() {
                     <span className="font-semibold">Total</span><span><strong className="text-xl font-bold text-emerald-600">{money(total)}</strong><span className="ml-1 text-xs text-slate-500">EGP</span></span>
                   </div>
                 </div>
-                <button type="button" className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-linear-to from-emerald-600 to-green-700 text-base font-semibold text-white shadow-md shadow-emerald-700/15 hover:brightness-105">
+                <button type="button" className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-700 text-base font-semibold text-white shadow-md shadow-emerald-700/15 hover:brightness-105">
                   <LockKeyhole className="size-4" /> Place Order
                 </button>
                 <div className="flex items-center justify-center gap-2.5 text-xs text-slate-500">
