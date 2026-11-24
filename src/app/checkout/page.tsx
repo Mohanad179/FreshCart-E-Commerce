@@ -14,6 +14,7 @@ import {
 import FeaturesStrip from "@/components/shared/FeaturesStrip";
 import { getCart } from "@/services/cart";
 import { CartData } from "@/types/types";
+import CashOrderForm from "@/components/checkout/CashOrderForm";
 
 const money = (amount: number) => new Intl.NumberFormat("en-US").format(amount);
 
@@ -48,6 +49,7 @@ export default async function CheckoutPage() {
             <Link href="/shop" className="mt-4 inline-flex text-base font-medium text-emerald-600 hover:text-emerald-700">Continue Shopping</Link>
           </section>
         ) : (
+          <CashOrderForm cartId={cart?._id ?? ""}>
           <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] lg:gap-5">
             <div className="space-y-4">
               <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -61,11 +63,11 @@ export default async function CheckoutPage() {
                     <p className="mt-0.5 text-xs text-emerald-700">Please make sure your address is accurate for smooth delivery.</p>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="block text-sm font-medium text-slate-700">Full Name <span className="text-red-500">*</span>
-                      <input required name="name" autoComplete="name" placeholder="Enter your full name" className="mt-1.5 h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm font-normal text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15" />
-                    </label>
                     <label className="block text-sm font-medium text-slate-700">Phone Number <span className="text-red-500">*</span>
                       <input required name="phone" type="tel" autoComplete="tel" placeholder="01xxxxxxxxx" className="mt-1.5 h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm font-normal text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15" />
+                    </label>
+                    <label className="block text-sm font-medium text-slate-700">Postal Code <span className="text-red-500">*</span>
+                      <input required name="postalCode" autoComplete="postal-code" placeholder="e.g. 12345" className="mt-1.5 h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm font-normal text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15" />
                     </label>
                     <label className="block text-sm font-medium text-slate-700 sm:col-span-2">City <span className="text-red-500">*</span>
                       <input required name="city" autoComplete="address-level2" placeholder="e.g. Cairo, Alexandria, Giza" className="mt-1.5 h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm font-normal text-slate-800 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15" />
@@ -87,12 +89,6 @@ export default async function CheckoutPage() {
                     <input type="radio" name="payment" value="cash" defaultChecked className="peer size-4 accent-emerald-600" />
                     <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-emerald-100 text-emerald-700"><Banknote className="size-5" /></span>
                     <span className="flex-1"><span className="block text-sm font-semibold text-slate-900">Cash on Delivery</span><span className="mt-0.5 block text-xs text-slate-500">Pay when your order arrives at your doorstep</span></span>
-                    <span className="grid size-5 shrink-0 place-items-center rounded-full border border-gray-300 text-transparent peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white"><Check className="size-3.5" /></span>
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-white p-3.5 transition-colors has-checked:border-emerald-500 has-checked:bg-emerald-50/50">
-                    <input type="radio" name="payment" value="online" className="peer size-4 accent-emerald-600" />
-                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-gray-100 text-slate-500"><CreditCard className="size-5" /></span>
-                    <span className="flex-1"><span className="block text-sm font-semibold text-slate-900">Pay Online</span><span className="mt-0.5 block text-xs text-slate-500">Secure payment with Credit/Debit Card via Stripe</span></span>
                     <span className="grid size-5 shrink-0 place-items-center rounded-full border border-gray-300 text-transparent peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white"><Check className="size-3.5" /></span>
                   </label>
                   <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2.5 text-xs text-emerald-700">
@@ -129,8 +125,8 @@ export default async function CheckoutPage() {
                     <span className="font-semibold">Total</span><span><strong className="text-xl font-bold text-emerald-600">{money(total)}</strong><span className="ml-1 text-xs text-slate-500">EGP</span></span>
                   </div>
                 </div>
-                <button type="button" className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-700 text-base font-semibold text-white shadow-md shadow-emerald-700/15 hover:brightness-105">
-                  <LockKeyhole className="size-4" /> Place Order
+                <button type="submit" className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-700 text-base font-semibold text-white shadow-md shadow-emerald-700/15 hover:brightness-105">
+                  <LockKeyhole className="size-4" /> Place Cash Order
                 </button>
                 <div className="flex items-center justify-center gap-2.5 text-xs text-slate-500">
                   <span className="inline-flex items-center gap-1"><ShieldCheck className="size-3.5 text-emerald-500" /> Secure</span>
@@ -140,6 +136,7 @@ export default async function CheckoutPage() {
               </div>
             </aside>
           </div>
+          </CashOrderForm>
         )}
       </div>
       <FeaturesStrip />

@@ -45,6 +45,7 @@ export type CartLine = {
 };
 
 export type CartData = {
+  _id: string;
   products: CartLine[];
   totalCartPrice: number;
   numOfCartItems: number;
@@ -54,3 +55,10 @@ export type CartContextValue = {
   numberOfCartItems: number;
   refreshCartCount: () => Promise<void>;
 };
+
+export interface ShippingAddressType {
+  details: string;
+  phone: string;
+  city: string;
+  postalCode: string;
+}
