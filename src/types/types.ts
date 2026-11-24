@@ -49,3 +49,8 @@ export type CartData = {
   totalCartPrice: number;
   numOfCartItems: number;
 };
+
+export type CartContextValue = {
+  numberOfCartItems: number;
+  refreshCartCount: () => Promise<void>;
+};

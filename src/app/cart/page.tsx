@@ -57,6 +57,7 @@ export default async function Cart() {
                     <h2 className="line-clamp-2 pr-10 text-lg font-semibold leading-6 text-slate-900 sm:line-clamp-1">
                       {product.title}
                     </h2>
+                    {/* product category + the id sliced  */}
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-500">
                       <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
                         {product.category?.name ?? "Product"}

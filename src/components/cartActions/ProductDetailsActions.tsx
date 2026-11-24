@@ -6,6 +6,7 @@ import { LoaderCircle, Minus, Plus, ShoppingCart, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useCart } from "@/components/providers/CartContextProvider";
 
 export default function ProductDetailsActions({
   productId,
@@ -19,6 +20,7 @@ export default function ProductDetailsActions({
   const [count, setCount] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const router = useRouter();
+  const { refreshCartCount } = useCart();
 
   async function handleAddToCart(buyNow = false) {
     if (isAdding || availableQuantity < 1) return;
@@ -41,6 +43,7 @@ export default function ProductDetailsActions({
       }
 
       toast.success(`${count} ${count === 1 ? "item" : "items"} added to cart`);
+      void refreshCartCount();
       if (buyNow) {
         router.push("/cart");
       } else {

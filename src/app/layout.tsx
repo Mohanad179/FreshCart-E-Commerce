@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 import Navbar from "../components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "sonner";
-import AuthProvider from "@/components/auth/AuthProvider";
+import AuthProvider from "@/components/providers/AuthProvider";
+import CartContextProvider from "@/components/providers/CartContextProvider";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
 const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage" });
@@ -24,10 +25,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="font-sans antialiased overflow-x-clip">
 
         <AuthProvider>
+          <CartContextProvider>
           <Navbar />
           {children}
-          <Toaster position="top-right" theme="light" richColors />
+          <Toaster position="top-center" theme="light" richColors />
           <Footer />
+          </CartContextProvider>
         </AuthProvider>
 
       </body>

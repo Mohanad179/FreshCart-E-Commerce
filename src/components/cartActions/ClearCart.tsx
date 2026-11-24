@@ -4,10 +4,12 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { useCart } from "@/components/providers/CartContextProvider";
 
 export default function ClearCart() {
   const [isClearing, setisClearing] = useState(false);
   const router = useRouter();
+  const { refreshCartCount } = useCart();
 
   async function handleClearCart() {
     if (isClearing) return;
@@ -15,6 +17,7 @@ export default function ClearCart() {
     try {
       const result = await clearCart();
       if (result.success) {
+        void refreshCartCount();
         toast.success("Cart items Cleared!");
         router.refresh();
       } else {

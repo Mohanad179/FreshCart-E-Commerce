@@ -4,10 +4,12 @@ import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useCart } from "@/components/providers/CartContextProvider";
 
 export default function RemoveCartItem({ productId }: { productId: string }) {
   const router = useRouter();
   const [isRemoving, setIsRemoving] = useState(false);
+  const { refreshCartCount } = useCart();
 
   async function handleRemoveItem() {
     if (isRemoving) return;
@@ -15,6 +17,7 @@ export default function RemoveCartItem({ productId }: { productId: string }) {
     try {
       const result = await removeCartItem(productId);
       if (result.success) {
+        void refreshCartCount();
         toast.success("Item Removed Successfully!");
         router.refresh();
       } else {

@@ -3,9 +3,11 @@ import { addToCart } from '@/services/cart';
 import { LoaderCircle, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useCart } from '@/components/providers/CartContextProvider';
 
 export default function AddToCartBtn({ productId }: { productId: string }) {
   const [isAdding, setIsAdding] = useState(false);
+  const { refreshCartCount } = useCart();
 
   async function handleAddToCart() {
     if (isAdding) return;
@@ -14,6 +16,7 @@ export default function AddToCartBtn({ productId }: { productId: string }) {
     try {
       const result = await addToCart(productId);
       if (result.success) {
+        void refreshCartCount();
         toast.success('Product added to cart');
       } else {
         toast.error(result.message);

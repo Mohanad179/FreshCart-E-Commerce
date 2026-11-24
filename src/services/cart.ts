@@ -4,7 +4,18 @@ import getMyToken from "@/utils/getMyToken"; // adjust path
 
 const CART_URL_V2 = "https://ecommerce.routemisr.com/api/v2/cart";
 
-async function cartRequest(path: string, method: string, body?: object) {
+type CartApiResponse = {
+  status?: string;
+  message?: string;
+  numOfCartItems?: number;
+  data?: import("@/types/types").CartData;
+};
+
+type CartRequestResult =
+  | { success: true; data: CartApiResponse }
+  | { success: false; message: string };
+
+async function cartRequest(path: string, method: string, body?: object): Promise<CartRequestResult> {
   try {
     const token = await getMyToken();
     if (!token) return { success: false, message: "Not authenticated" };
@@ -16,7 +27,7 @@ async function cartRequest(path: string, method: string, body?: object) {
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    const data = await res.json();
+    const data = (await res.json()) as CartApiResponse;
     if (!res.ok) return { success: false, message: data?.message ?? "Request failed" };
     
     return { success: true, data };

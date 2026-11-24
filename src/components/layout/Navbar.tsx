@@ -8,7 +8,6 @@ import {
   Menu,
   Phone,
   Search,
-  ShoppingCart,
   Truck,
 } from "lucide-react";
 
@@ -28,6 +27,7 @@ import {
 } from "@/components/ui/sheet";
 import logo from "@/assets/images/navlogo.png";
 import NavbarAuthActions from "@/components/layout/NavbarAuthActions";
+import CartIcon from "@/components/layout/CartIcon";
 import { getAllCategories } from "@/services/categories";
 
 const links = [
@@ -169,16 +169,7 @@ export default async function Navbar() {
               <p className="text-sm font-semibold">24/7 Help</p>
             </div>
           </div>
-          <Button
-            className="hover:text-primary"
-            nativeButton={false}
-            variant="ghost"
-            size="icon"
-            aria-label="Cart"
-            render={<Link href="/cart" />}
-          >
-            <ShoppingCart className="size-6" />
-          </Button>
+          <CartIcon />
           <NavbarAuthActions variant="desktop" />
         </div>
       </div>

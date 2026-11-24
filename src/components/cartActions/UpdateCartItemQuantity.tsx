@@ -4,6 +4,7 @@ import { Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { useCart } from "@/components/providers/CartContextProvider";
 
 export default function UpdateCartItemQuantity({
   productId,
@@ -14,6 +15,7 @@ export default function UpdateCartItemQuantity({
 }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
+  const { refreshCartCount } = useCart();
 
   async function handleUpdateItemQuantity(nextCount: number) {
     if (isUpdating) return;
@@ -22,6 +24,7 @@ export default function UpdateCartItemQuantity({
     try {
       const result = await updateCartItemQuantity(productId, nextCount);
       if (result.success) {
+        void refreshCartCount();
         router.refresh();
       } else {
         toast.error(result.message);
